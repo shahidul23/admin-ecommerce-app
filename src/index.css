@@ -21,4 +21,8 @@ body {
 .ant-layout{
     min-height: 100vh;
 }
+/* login page */
+.w-30{
+    width: 30% !important;
+}
   
