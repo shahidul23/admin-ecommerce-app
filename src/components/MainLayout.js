@@ -1,42 +1,129 @@
 import React, { useState } from 'react';
+import { AiTwotoneDashboard } from "react-icons/ai";
+import { IoCartOutline } from "react-icons/io5";
+import { FaRegUser, FaRegListAlt, FaBloggerB  } from "react-icons/fa";
+import { MdOutlineBrandingWatermark, MdOutlineCategory, MdOutlineFeedback  } from "react-icons/md";
+import { CiCircleList } from "react-icons/ci";
+import { TbCategory } from "react-icons/tb";
+
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, Button, theme } from 'antd';
 import Dashboard from '../pages/Dashboard';
+import { useNavigate } from 'react-router-dom';
 const { Header, Sider, Content } = Layout;
 const MainLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+  const navigate = useNavigate();
   return (
     <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="logo" />
+        <div className="logo">
+          <h2 className='text-white fs-5 text-center py-3 mb-0 gp-10'>
+            <span className='sm-logo'>DC</span>
+            <span className='lg-logo'>Dev Corner</span>
+          </h2>
+        </div>
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={['1']}
+          defaultSelectedKeys={[""]}
+          onClick={({key}) =>{
+            if (key === "logout") {
+              
+            }else{
+              navigate(key)
+            }
+          }}
           items={[
             {
-              key: '1',
-              icon: <UserOutlined />,
-              label: 'nav 1',
+              key: '',
+              icon: <AiTwotoneDashboard  className='fs-4'/>,
+              label: 'Dashboard',
             },
             {
-              key: '2',
-              icon: <VideoCameraOutlined />,
-              label: 'nav 2',
+              key: 'customers',
+              icon: <FaRegUser  className='fs-5'/>,
+              label: 'Customers',
             },
             {
-              key: '3',
-              icon: <UploadOutlined />,
-              label: 'nav 3',
+              key: 'catalog',
+              icon: <IoCartOutline  className='fs-5'/>,
+              label: 'Catalogs',
+              children:[
+                {
+                  key:'product',
+                  icon:<IoCartOutline className='fs-5'/>,
+                  label:"Add Product"
+                },
+                {
+                  key:'product-list',
+                  icon:<CiCircleList  className='fs-5'/>,
+                  label:"Products List"
+                },
+                {
+                  key:'brand',
+                  icon:<MdOutlineBrandingWatermark className='fs-5'/>,
+                  label:"Brands"
+                },
+                {
+                  key:'brand-list',
+                  icon:<CiCircleList className='fs-5'/>,
+                  label:"Brands List"
+                },
+                {
+                  key:'category',
+                  icon:<TbCategory className='fs-5'/>,
+                  label:"Category"
+                },
+                {
+                  key:'category-list',
+                  icon:<CiCircleList className='fs-5'/>,
+                  label:"Category List"
+                },
+              ],
+            },
+            {
+              key: 'orders',
+              icon: <FaRegListAlt  className='fs-6'/>,
+              label: 'Orders',
+            },
+            {
+              key: 'blogs',
+              icon: <FaBloggerB  className='fs-5'/>,
+              label: 'Blogs',
+              children:[
+                {
+                  key:'blog',
+                  icon: <FaBloggerB  className='fs-5'/>,
+                  label:'Add Blogs'
+                },
+                {
+                  key:'blog-list',
+                  icon: <CiCircleList  className='fs-5'/>,
+                  label:'Blogs List'
+                },
+                {
+                  key:'blog-category',
+                  icon: <MdOutlineCategory  className='fs-5'/>,
+                  label:'Add Blog Category'
+                },
+                {
+                  key:'blog-category-list',
+                  icon: <CiCircleList  className='fs-5'/>,
+                  label:'Blogs Category  List'
+                },
+              ]
+            },
+            {
+              key: 'enquiries',
+              icon: <MdOutlineFeedback  className='fs-5'/>,
+              label: 'Enquiries',
             },
           ]}
         />
