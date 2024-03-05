@@ -5,14 +5,14 @@ import { FaRegUser, FaRegListAlt, FaBloggerB  } from "react-icons/fa";
 import { MdOutlineBrandingWatermark, MdOutlineCategory, MdOutlineFeedback  } from "react-icons/md";
 import { CiCircleList } from "react-icons/ci";
 import { TbCategory } from "react-icons/tb";
-
+import shohan from "../images/shohan.jpg"
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
 } from '@ant-design/icons';
+import { IoIosNotifications } from "react-icons/io";
 import { Layout, Menu, Button, theme } from 'antd';
-import Dashboard from '../pages/Dashboard';
-import { useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 const { Header, Sider, Content } = Layout;
 const MainLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -130,6 +130,7 @@ const MainLayout = () => {
       </Sider>
       <Layout>
         <Header
+        className='d-flex justify-content-between ps-0 pe-5'
           style={{
             padding: 0,
             background: colorBgContainer,
@@ -145,6 +146,21 @@ const MainLayout = () => {
               height: 64,
             }}
           />
+          <div className='d-flex gap-4 align-items-center'>
+            <div className='position-relative'>
+              <IoIosNotifications className='fs-2'/>
+              <span className='badge bg-warning rounded-circle p-1 position-absolute'>3</span>
+            </div>
+            <div className='d-flex gap-2 align-items-center'>
+              <div>
+                <img src={shohan} alt='shohan' className='img-fluid profile-pic' />
+              </div>
+              <div>
+                <h5 className='mb-0'>Shohan khan</h5>
+                <p className='mb-0'>shohankhan2354@gmail.com</p>
+              </div>
+            </div>
+          </div>
         </Header>
         <Content
           style={{
@@ -155,7 +171,7 @@ const MainLayout = () => {
             borderRadius: borderRadiusLG,
           }}
         >
-          <Dashboard />
+          <Outlet />
         </Content>
       </Layout>
     </Layout>

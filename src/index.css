@@ -52,6 +52,25 @@ body {
 .ant-menu-title-content{
     font-size: 16px;
 }
-.main{
+main{
     overflow-y: scroll;
+    background-color: transparent !important;
+    padding: 0 !important;
+}
+.profile-pic{
+    width: 55px;
+    height: 55px;
+    border-radius: 10px;
+}
+.ant-layout-header h5{
+    line-height: 20px;
+    font-size: 15px;
+}
+.ant-layout-header p{
+    line-height: 20px;
+    font-size: 13px;
+}
+.ant-layout-header div .badge{
+    top: 16px;
+    right: -6px
 }
