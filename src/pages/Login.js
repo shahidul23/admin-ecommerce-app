@@ -8,7 +8,7 @@ const Login = () => {
       <br />
       <br />
       <div className='my-5 w-30 bg-white rounded-3 mx-auto p-4'>
-      <h3 className='text-center'>Login</h3>
+      <h3 className='text-center title'>Login</h3>
       <p className='text-center'>Login to your account to continue</p>
         <form action=''>
           <CustomInput type="email" placeholder="Email Address" id="email"/>

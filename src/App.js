@@ -14,6 +14,10 @@ import ProductList from './pages/ProductList';
 import BrandList from './pages/BrandList';
 import CategoryList from './pages/CategoryList';
 import AddBlog from './pages/AddBlog';
+import AddBlogCat from './pages/AddBlogCat';
+import Category from './pages/Category';
+import AddBrand from './pages/AddBrand';
+import AddProduct from './pages/AddProduct';
 
 function App() {
   return (
@@ -27,11 +31,15 @@ function App() {
           <Route path='enquiries' element={<Enquiries />}/>
           <Route path='blog' element={<AddBlog />}/>
           <Route path='blog-list' element={<BlogList />}/>
+          <Route path='blog-category' element={<AddBlogCat />}/>
           <Route path='blog-category-list' element={<BlogCatList />}/>
           <Route path='orders' element={<Oder />}/>
           <Route path='customers' element={<Customers />}/>
+          <Route path='product' element={<AddProduct />}/>
           <Route path='product-list' element={<ProductList />}/>
+          <Route path='brand' element={<AddBrand />}/>
           <Route path='brand-list' element={<BrandList />}/>
+          <Route path='category' element={<Category />}/>
           <Route path='category-list' element={<CategoryList />}/>
         </Route>
       </Routes>

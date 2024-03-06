@@ -1,5 +1,7 @@
 import React from 'react'
 import { Table } from 'antd';
+import { FiEdit } from "react-icons/fi";
+import { MdDeleteForever } from "react-icons/md";
 
 const columns = [
     {
@@ -31,7 +33,7 @@ const columns = [
 const BlogCatList = () => {
   return (
     <div>
-      <h3 className='mb-4'>Blog Category List</h3>
+      <h3 className='mb-4 title'>Blog Category List</h3>
       <div>
       <Table columns={columns} dataSource={Tabledata} />
       </div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { AiTwotoneDashboard } from "react-icons/ai";
 import { IoCartOutline } from "react-icons/io5";
+import {Link} from 'react-router-dom'
 import { FaRegUser, FaRegListAlt, FaBloggerB  } from "react-icons/fa";
 import { MdOutlineBrandingWatermark, MdOutlineCategory, MdOutlineFeedback  } from "react-icons/md";
 import { CiCircleList } from "react-icons/ci";
@@ -151,13 +152,17 @@ const MainLayout = () => {
               <IoIosNotifications className='fs-2'/>
               <span className='badge bg-warning rounded-circle p-1 position-absolute'>3</span>
             </div>
-            <div className='d-flex gap-2 align-items-center'>
+            <div className='d-flex gap-2 align-items-center dropdown'>
               <div>
                 <img src={shohan} alt='shohan' className='img-fluid profile-pic' />
               </div>
-              <div>
+              <div role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                 <h5 className='mb-0'>Shohan khan</h5>
                 <p className='mb-0'>shohankhan2354@gmail.com</p>
+              </div>
+              <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <li><Link className="dropdown-item py-1 mb-1" style={{"height":"auto", "lineHeight":"20px"}} to="#">Profile</Link></li>
+                <li><Link className="dropdown-item py-1 mb-1" style={{"height":"auto", "lineHeight":"20px"}} to="#">Log out</Link></li>
               </div>
             </div>
           </div>
