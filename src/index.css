@@ -56,6 +56,10 @@ main{
     overflow-y: scroll;
     background-color: transparent !important;
     padding: 0 !important;
+    height: 80vh;
+}
+main::-webkit-scrollbar{
+    width: 0px;
 }
 .profile-pic{
     width: 55px;
