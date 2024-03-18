@@ -1,5 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Table } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUsers } from '../features/customers/customerSlice';
 
 
 const columns = [
@@ -10,27 +12,55 @@ const columns = [
     {
       title: 'Name',
       dataIndex: 'name',
+      sorter: (a, b) => a.name.length - b.name.length,
     },
     {
-      title: 'Product',
-      dataIndex: 'product',
+      title: 'Email',
+      dataIndex: 'email',
+      sorter: (a, b) => a.email.length - b.email.length,
     },
     {
-      title: 'Status',
-      dataIndex: 'status',
+      title: 'Phone Number',
+      dataIndex: 'phone',
+      sorter: (a, b) => a.phone - b.phone,
     },
   ];
-  const Tabledata = [];
-  for (let i = 0; i < 46; i++) {
-    Tabledata.push({
-      key: i+1,
-      name: `Edward King ${i+1}`,
-      product: 32,
-      status: `London, Park Lane no. ${i+1}`,
-    });
-  }  
+  
 
 const Customers = () => {
+  const dispatch = useDispatch();
+  useEffect(() =>{
+    dispatch(getUsers());
+  },[]);
+let CustomerState = useSelector((state) => state.customer.customers.getAllUsers);
+const Tabledata = [];
+
+if (Array.isArray(CustomerState)) {
+  for (let i = 0; i < CustomerState.length; i++) {
+    if (CustomerState[i].role !== "Admin") {
+      Tabledata.push({
+        key: i + 1,
+        name: CustomerState[i].firstName + " " + CustomerState[i].lastName,
+        email: CustomerState[i].email,
+        phone: "0" + CustomerState[i].mobile,
+      });
+    }
+  }
+} else {
+  console.error("CustomerState is not an array or is undefined.");
+}
+  // let CustomerState = useSelector((state) => state.customer.customers.getAllUsers);
+  // const Tabledata = [];
+  // for (let i = 0; i < CustomerState.length; i++) {
+  //   if (CustomerState[i].role !=="Admin") {
+  //     Tabledata.push({
+  //       key: i+1,
+  //       name: CustomerState[i].firstName +" "+ CustomerState[i].lastName,
+  //       email: CustomerState[i].email,
+  //       phone: "0"+CustomerState[i].mobile,
+  //     });
+  //   }
+  // }
   return (
     <div>
       <h3 className='mb-4 title'>Customers</h3>
