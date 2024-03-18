@@ -1,18 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import authService from './authService';
 
-
-// const userDefaultState = {
-//     _id: null,
-//     firstName:null,
-//     lastName:null,
-//     mobile:null,
-//     email:null,
-//     token:null,
-// };
 const getUserFromLocalstorage = localStorage.getItem('user')? JSON.parse(localStorage.getItem('user')):null;
 const initialState = {
     user:getUserFromLocalstorage,
+    orders:[],
     isError:false,
     isLoading:false,
     isSuccess:false,
@@ -22,6 +14,13 @@ const initialState = {
 export const login = createAsyncThunk('auth/admin-login', async (user, thunkAPI) =>{
     try {
         return await authService.login(user)
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error)
+    }
+});
+export const getOrders = createAsyncThunk('orders/get-orders', async (thunkAPI) =>{
+    try {
+        return await authService.getOrders();
     } catch (error) {
         return thunkAPI.rejectWithValue(error)
     }
@@ -41,15 +40,32 @@ export const authSlice = createSlice({
         (state, action) =>{
             state.isLoading = false;
             state.isSuccess = true;
+            state.isError = false;
             state.user = action.payload;
+            state.message = "success";
         })
         .addCase(login.rejected,
         (state, action) =>{
             state.isLoading = false;
             state.isSuccess = false;
             state.isError = true;
-            state.user = null;
-        });
+            state.message = action.error;
+        })
+        .addCase(getOrders.pending, (state)=>{
+            state.isLoading = true;
+        })
+        .addCase(getOrders.fulfilled, (state, action)=>{
+            state.isError =false;
+            state.isLoading = false;
+            state.isSuccess= true;
+            state.orders = action.payload;
+        })
+        .addCase(getOrders.rejected, (state, action)=>{
+            state.isError = true;
+            state.isLoading = false;
+            state.isSuccess = false;
+            state.message = action.error
+        })
     },
 });
 

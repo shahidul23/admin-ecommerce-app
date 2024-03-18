@@ -1,36 +1,53 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Table } from 'antd';
-import { FiEdit } from "react-icons/fi";
+import { useDispatch, useSelector } from 'react-redux';
+import { getBlogCats } from '../features/blogCat/blogCatSlice';
+import { Link } from 'react-router-dom';
+import { BiEdit } from "react-icons/bi";
 import { MdDeleteForever } from "react-icons/md";
 
 const columns = [
-    {
-      title: '#',
-      dataIndex: 'key',
-    },
-    {
-      title: 'Name',
-      dataIndex: 'name',
-    },
-    {
-      title: 'Product',
-      dataIndex: 'product',
-    },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-    },
-  ];
-  const Tabledata = [];
-  for (let i = 0; i < 46; i++) {
-    Tabledata.push({
-      key: i+1,
-      name: `Edward King ${i+1}`,
-      product: 32,
-      status: `London, Park Lane no. ${i+1}`,
-    });
-  }  
+  {
+    title: '#',
+    dataIndex: 'key',
+    sorter: (a, b) => a.key - b.key,
+  },
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    sorter: (a, b) => a.name.length - b.name.length,
+  },
+  {
+    title: 'Action',
+    dataIndex: 'action',
+  },
+];
 const BlogCatList = () => {
+  const dispatch = useDispatch();
+  useEffect(()=>{
+    dispatch(getBlogCats())
+  },[dispatch]);
+  const blogCatState = useSelector((state) => state.blogCat.blogsCat);
+  const Tabledata = [];
+
+  if (Array.isArray(blogCatState)) {
+    for (let i = 0; i < blogCatState.length; i++) {
+      Tabledata.push({
+        key: i + 1,
+        name: blogCatState[i].title,
+        action: (<>
+          <Link to="/" className='text-warning fs-3'>
+            <BiEdit />
+          </Link>
+          <Link to="/" className='text-danger fs-3'>
+            <MdDeleteForever />
+          </Link>
+          </>)
+      });
+    }
+  } else {
+    console.error("CustomerState is not an array or is undefined.");
+  }
   return (
     <div>
       <h3 className='mb-4 title'>Blog Category List</h3>
