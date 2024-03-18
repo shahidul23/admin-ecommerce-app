@@ -18,6 +18,8 @@ import AddBlogCat from './pages/AddBlogCat';
 import Category from './pages/Category';
 import AddBrand from './pages/AddBrand';
 import AddProduct from './pages/AddProduct';
+import Color from './pages/Color';
+import ColorList from './pages/ColorList';
 
 function App() {
   return (
@@ -41,6 +43,8 @@ function App() {
           <Route path='brand-list' element={<BrandList />}/>
           <Route path='category' element={<Category />}/>
           <Route path='category-list' element={<CategoryList />}/>
+          <Route path='color' element={<Color />}/>
+          <Route path='color-list' element={<ColorList />}/>
         </Route>
       </Routes>
     </Router>

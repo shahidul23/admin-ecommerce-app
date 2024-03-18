@@ -31,7 +31,7 @@ const Customers = () => {
   const dispatch = useDispatch();
   useEffect(() =>{
     dispatch(getUsers());
-  },[]);
+  },[dispatch]);
 let CustomerState = useSelector((state) => state.customer.customers.getAllUsers);
 const Tabledata = [];
 

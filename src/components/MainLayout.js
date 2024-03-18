@@ -7,6 +7,7 @@ import { MdOutlineBrandingWatermark, MdOutlineCategory, MdOutlineFeedback  } fro
 import { CiCircleList } from "react-icons/ci";
 import { TbCategory } from "react-icons/tb";
 import shohan from "../images/shohan.jpg"
+import { BiSolidColorFill } from "react-icons/bi";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -86,6 +87,16 @@ const MainLayout = () => {
                   key:'category-list',
                   icon:<CiCircleList className='fs-5'/>,
                   label:"Category List"
+                },
+                {
+                  key:'color',
+                  icon:<BiSolidColorFill className='fs-5'/>,
+                  label:"Color"
+                },
+                {
+                  key:'color-list',
+                  icon:<CiCircleList className='fs-5'/>,
+                  label:"Color List"
                 },
               ],
             },
