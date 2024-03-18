@@ -34,7 +34,7 @@ const Login = () => {
     }else{
       alert("not to access")
     }
-  },[user, isLoading, isSuccess, isError, message])
+  },[user, isLoading, isSuccess, isError, message, navigate])
 
   return (
     <div className='py-5' style={{background:"#ffd333", minHeight:"100vh"}}>
