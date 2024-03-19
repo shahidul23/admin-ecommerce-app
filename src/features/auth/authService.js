@@ -1,13 +1,6 @@
 import axios from "axios";
 import { base_url } from "../../utils/base_url";
-
-const getUserFromLocalstorage = localStorage.getItem('user')? JSON.parse(localStorage.getItem('user')):null;
-const config = {
-    headers:{
-        Authorization:`Bearer ${getUserFromLocalstorage.token}`,
-        Accept:"application/json",
-    }
-}
+import { config } from "../../utils/axiosconfig"
 const login = async(userData) =>{
     const response = await axios.post(`${base_url}user/admin-login`, userData);
     if (response.data) {
@@ -16,7 +9,7 @@ const login = async(userData) =>{
     return response.data;
 }
 const getOrders = async() =>{
-    const response = await axios.get(`${base_url}order/`,config);
+    const response = await axios.get(`${base_url}order/all-order`,config);
     return response.data;
 }
 

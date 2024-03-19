@@ -46,8 +46,6 @@ if (Array.isArray(CustomerState)) {
       });
     }
   }
-} else {
-  console.error("CustomerState is not an array or is undefined.");
 }
   // let CustomerState = useSelector((state) => state.customer.customers.getAllUsers);
   // const Tabledata = [];

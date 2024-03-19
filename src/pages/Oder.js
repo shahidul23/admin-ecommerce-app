@@ -2,6 +2,9 @@ import React, { useEffect } from 'react'
 import { Table } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { getOrders } from '../features/auth/authSlice';
+import { Link } from 'react-router-dom';
+import { BiEdit } from "react-icons/bi";
+import { MdDeleteForever } from "react-icons/md";
 
 const columns = [
   {
@@ -13,12 +16,20 @@ const columns = [
     dataIndex: 'name',
   },
   {
-    title: 'Email',
-    dataIndex: 'email',
+    title: 'Products',
+    dataIndex: 'products',
   },
   {
-    title: 'Phone',
-    dataIndex: 'phone',
+    title: 'Amount',
+    dataIndex: 'amount',
+  },
+  {
+    title: 'Date',
+    dataIndex: 'date',
+  },
+  {
+    title: 'Action',
+    dataIndex: 'action',
   },
 ];
 const Oder = () => {
@@ -33,13 +44,30 @@ if (Array.isArray(ordersState)) {
   for (let i = 0; i < ordersState.length; i++) {
     Tabledata.push({
       key: i + 1,
-      name: ordersState[i].firstName,
-      email: ordersState[i].email,
-      phone: "0" + ordersState[i].mobile,
+      name: ordersState[i].orderBy.firstName + " "+ ordersState[i].orderBy.lastName,
+      products: ordersState[i].products.map((i,j)=>{
+        return (
+          <div key={j}>
+            <ul>
+              <li>{i.product.title}</li>
+            </ul>
+          </div>
+        );
+      }),
+      amount: `$${ordersState[i].paymentIntent.amount}`,
+      date: new Date(ordersState[i].createdAt).toLocaleString(),
+      action:(
+        <>
+        <Link to="/" className='text-warning fs-3'>
+          <BiEdit />
+        </Link>
+        <Link to="/" className='text-danger fs-3'>
+          <MdDeleteForever />
+        </Link>
+        </>
+      )
     });
   }
-} else {
-  console.error("orders is not an array or is undefined.");
 }
   return (
     <div>
