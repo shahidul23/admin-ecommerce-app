@@ -11,6 +11,9 @@ import { getColors } from '../features/color/colorSlice';
 import Multiselect from "react-widgets/Multiselect";
 import "react-widgets/styles.css";
 import Dropzone from 'react-dropzone'
+import { deleteImg, getUploads } from '../features/upload/uploadSlice';
+import { createProducts } from '../features/product/productSlice';
+
 
 let userSchema = Yup.object({ 
   title: Yup.string().required("Title is Required"),
@@ -22,6 +25,7 @@ let userSchema = Yup.object({
 const AddProduct = () => {
   const dispatch = useDispatch();
   const [color, setColor] = useState([]);
+  const [images, setImages] = useState([]);
   const formik = useFormik({
     initialValues:{
       title:'',
@@ -31,10 +35,12 @@ const AddProduct = () => {
       description:'',
       color:'',
       category:'',
-      brand:''
+      brand:'',
+      images:'',
     },
     validationSchema:userSchema ,
     onSubmit: values => {
+      dispatch(createProducts(values))
       alert(JSON.stringify(values));
     },
   });
@@ -44,11 +50,12 @@ const AddProduct = () => {
     dispatch(getBrands());
     dispatch(getCategories());
     dispatch(getColors());
-    formik.values.color = color;
   },[dispatch]);
+
   const brandState = useSelector((state) => state.brand.brands);
   const categoryState = useSelector((state) =>state.category.categories);
   const colorState = useSelector((state) =>state.color.colors);
+  const imageState = useSelector((state) =>state.upload.images.data)
   const colors = [];
   colorState.forEach((i) =>{
     colors.push({
@@ -56,7 +63,20 @@ const AddProduct = () => {
       color:i.title
     })
   });
-
+  const img = [];
+  imageState && imageState.forEach((i)=>{
+    img.push({
+      public_id:i.public_id,
+      url:i.url
+    })
+  })
+  useEffect(() =>{
+    formik.values.color = color;
+    
+  },[color]);
+  useEffect(()=>{
+    formik.values.images = img;
+  },[images])
   return (
     <div style={{padding:"30px"}}>
       <h3 className='mb-4 title'>Add Product</h3>
@@ -130,6 +150,7 @@ const AddProduct = () => {
               </div>
             </div>
             <Multiselect
+              name="color"
               dataKey="id"
               textField="color"
               data={colors}
@@ -168,7 +189,7 @@ const AddProduct = () => {
               </div>
             </div>
             <div className='bg-white border-1 py-5 text-center rounded-3'>
-            <Dropzone onDrop={acceptedFiles => console.log(acceptedFiles)}>
+            <Dropzone onDrop={acceptedFiles => dispatch(getUploads(acceptedFiles))}>
               {({getRootProps, getInputProps}) => (
                 <section>
                   <div {...getRootProps()}>
@@ -178,6 +199,18 @@ const AddProduct = () => {
                 </section>
               )}
             </Dropzone>
+            </div>
+            <div className='show-image d-flex flex-wrap gap-3'>
+              {imageState && imageState.map((item, key) => (
+                <div key={key} className='position-relative'>
+                  <button 
+                  type='submit'
+                  onClick={()=>dispatch(deleteImg(item.public_id))}
+                  className='btn-close position-absolute'
+                  style={{top:"5px", right:"5px"}}></button>
+                  <img src={item.url} alt="" width='200px' height='auto'/>
+                </div>
+              ))}
             </div>
             <button type='submit' className='btn  btn-success border-0 rounded-3 my-5'>Add Product</button>
         </form>
