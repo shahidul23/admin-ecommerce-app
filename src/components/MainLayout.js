@@ -8,6 +8,9 @@ import { CiCircleList } from "react-icons/ci";
 import { TbCategory } from "react-icons/tb";
 import shohan from "../images/shohan.jpg"
 import { BiSolidColorFill } from "react-icons/bi";
+import { ToastContainer } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
+
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -187,6 +190,7 @@ const MainLayout = () => {
             borderRadius: borderRadiusLG,
           }}
         >
+          <ToastContainer />
           <Outlet />
         </Content>
       </Layout>

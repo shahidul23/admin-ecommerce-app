@@ -13,6 +13,9 @@ import "react-widgets/styles.css";
 import Dropzone from 'react-dropzone'
 import { deleteImg, getUploads } from '../features/upload/uploadSlice';
 import { createProducts } from '../features/product/productSlice';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
 
 
 let userSchema = Yup.object({ 
@@ -25,7 +28,8 @@ let userSchema = Yup.object({
 const AddProduct = () => {
   const dispatch = useDispatch();
   const [color, setColor] = useState([]);
-  const [images, setImages] = useState([]);
+  //const [images, setImages] = useState([]);
+  const navigate = useNavigate();
   const formik = useFormik({
     initialValues:{
       title:'',
@@ -34,6 +38,7 @@ const AddProduct = () => {
       quantity:'',
       description:'',
       color:'',
+      tags:'',
       category:'',
       brand:'',
       images:'',
@@ -41,7 +46,12 @@ const AddProduct = () => {
     validationSchema:userSchema ,
     onSubmit: values => {
       dispatch(createProducts(values))
-      alert(JSON.stringify(values));
+      formik.resetForm();
+      setColor("");
+      setTimeout(() => {
+        navigate('/admin/product-list')
+      }, 3000);
+      //alert(JSON.stringify(values));
     },
   });
 
@@ -55,7 +65,36 @@ const AddProduct = () => {
   const brandState = useSelector((state) => state.brand.brands);
   const categoryState = useSelector((state) =>state.category.categories);
   const colorState = useSelector((state) =>state.color.colors);
-  const imageState = useSelector((state) =>state.upload.images.data)
+  const imageState = useSelector((state) =>state.upload.images.data);
+  const newProduct = useSelector((state) =>state.product);
+const { isError, isLoading, isSuccess, createProduct } = newProduct;
+
+useEffect(() => {
+  if (isSuccess && createProduct) {
+    toast.success("New Product has been created successfully.", {
+      position: "top-right",
+      autoClose: 250,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  }
+  if (isError) {
+    toast.error('Something went wrong! Please try again later', {
+      position: "top-right",
+      autoClose: 250,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  }
+}, [isError, isSuccess, isLoading, createProduct]);
   const colors = [];
   colorState.forEach((i) =>{
     colors.push({
@@ -72,11 +111,9 @@ const AddProduct = () => {
   })
   useEffect(() =>{
     formik.values.color = color;
-    
-  },[color]);
-  useEffect(()=>{
     formik.values.images = img;
-  },[images])
+    
+  },[color,img]);
   return (
     <div style={{padding:"30px"}}>
       <h3 className='mb-4 title'>Add Product</h3>
@@ -156,6 +193,18 @@ const AddProduct = () => {
               data={colors}
               onChange={(e)=>setColor(e)}
             />
+            <select 
+              name='tags' 
+              onChange={formik.handleChange("tags")}
+              onBlur={formik.handleBlur("tags")}
+              value={formik.values.tags}
+              className='form-control py-3'
+              id='tags'>
+                <option value="">Select Tags</option>
+                <option value="featured">Featured</option>
+                <option value="popular">Popular</option>
+                <option value="special">Special</option>
+            </select>
             <div className='d-flex justify-content-between align-items-center gap-3'>
               <div className='d-flex justify-content-between align-items-end gap-3 flex-grow-1'>
                 <select 
@@ -204,7 +253,7 @@ const AddProduct = () => {
               {imageState && imageState.map((item, key) => (
                 <div key={key} className='position-relative'>
                   <button 
-                  type='submit'
+                  type='button'
                   onClick={()=>dispatch(deleteImg(item.public_id))}
                   className='btn-close position-absolute'
                   style={{top:"5px", right:"5px"}}></button>
