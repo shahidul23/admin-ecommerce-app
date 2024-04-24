@@ -1,6 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import categoryService from "./categoryService";
 
+export const createCategory = createAsyncThunk("brand/add-brand", async(category,thunkAPI) =>{
+  try {
+      return await  categoryService.createCategory(category);
+  } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
 export const getCategories = createAsyncThunk(
   "categories/get-categories",
   async (thunkAPI) => {
@@ -33,6 +41,21 @@ const categoriesSlice = createSlice({
           state.categories = action.payload;
         })
         .addCase(getCategories.rejected, (state,action)=>{
+          state.isLoading = false;
+          state.isError = true;
+          state.isSuccess = false;
+          state.message = action.error;
+        })
+        .addCase(createCategory.pending, (state) => {
+          state.isLoading = true;
+        })
+        .addCase(createCategory.fulfilled, (state, action) => {
+          state.isLoading = false;
+          state.isSuccess=true;
+          state.isError= false;
+          state.createCategories = action.payload 
+        })
+        .addCase(createCategory.rejected, (state,action)=>{
           state.isLoading = false;
           state.isError = true;
           state.isSuccess = false;

@@ -1,6 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import blogsCatService from "./blogCatService";
 
+export const createCatBlog = createAsyncThunk("blogsCat/add-blogsCat", async(bCat, thunkAPI) =>{
+    try {
+        return await blogsCatService.createCatBlog(bCat);
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error.message);
+    }
+})
 export const getBlogCats = createAsyncThunk("blogsCat/get-blogsCat", async(thunkAPI)=>{
     try {
         return await blogsCatService.getBlogCat();
@@ -31,6 +38,21 @@ export const blogCatSlice = createSlice({
             state.blogsCat = action.payload;
         })
         .addCase(getBlogCats.rejected, (state, action) =>{
+            state.isLoading = false;
+            state.isError = true;
+            state.isSuccess = false;
+            state.message = action.error;
+        })
+        .addCase(createCatBlog.pending, (state) =>{
+            state.isLoading = true;
+        })
+        .addCase(createCatBlog.fulfilled, (state, action)=>{
+            state.isLoading = false;
+            state.isSuccess = true;
+            state.isError = false;
+            state.createCatBlogs = action.payload;
+        })
+        .addCase(createCatBlog.rejected, (state, action) =>{
             state.isLoading = false;
             state.isError = true;
             state.isSuccess = false;

@@ -1,6 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import colorService from "./colorService";
 
+export const createColor = createAsyncThunk("color/create-color", async(color, thunkAPI) =>{
+    try {
+        return await colorService.createColor(color);
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error.message);
+    }
+})
 export const getColors = createAsyncThunk("color/get-color", async(thunkAPI) =>{
     try {
         return await colorService.getColor();
@@ -35,7 +42,23 @@ const colorsSlice=createSlice({
             state.isError= true;
             state.isSuccess=false;
             state.message=action.error;
-        });
+        })
+        .addCase(createColor.pending, (state) =>{
+            state.isLoading=true;
+            state.isError=false;
+        })
+        .addCase(createColor.fulfilled,(state,action)=>{
+            state.isLoading=false;
+            state.isSuccess=true;
+            state.isError = false;
+            state.createColors = action.payload;
+        })
+        .addCase(createColor.rejected, (state, action)=>{
+            state.isLoading=false;
+            state.isError= true;
+            state.isSuccess=false;
+            state.message=action.error;
+        })
     },
 });
 export default colorsSlice.reducer;

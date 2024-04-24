@@ -73,7 +73,7 @@ useEffect(() => {
   if (isSuccess && createProduct) {
     toast.success("New Product has been created successfully.", {
       position: "top-right",
-      autoClose: 250,
+      autoClose: 2500,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -85,7 +85,7 @@ useEffect(() => {
   if (isError) {
     toast.error('Something went wrong! Please try again later', {
       position: "top-right",
-      autoClose: 250,
+      autoClose: 2500,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
