@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { createCatBlog } from '../features/blogCat/blogCatSlice';
+import { createCatBlog, resetState } from '../features/blogCat/blogCatSlice';
 
 let blogCatSchema = Yup.object({
   title: Yup.string().required("Blog Category is Required"),
@@ -26,6 +26,7 @@ const AddBlogCat = () => {
     onSubmit: values =>{
       dispatch(createCatBlog(values))
       setTimeout(() =>{
+        dispatch(resetState())
         navigate('/admin/blog-category-list')
       },3000)
       formik.resetForm();

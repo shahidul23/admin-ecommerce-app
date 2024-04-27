@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import colorService from "./colorService";
 
 export const createColor = createAsyncThunk("color/create-color", async(color, thunkAPI) =>{
@@ -15,6 +15,9 @@ export const getColors = createAsyncThunk("color/get-color", async(thunkAPI) =>{
         return thunkAPI.rejectWithValue(error.message);
     }
 });
+
+export const resetState = createAction("color/reset-state");
+
 const initialState = {
     colors:[],
     isLoading:false,
@@ -59,6 +62,9 @@ const colorsSlice=createSlice({
             state.isSuccess=false;
             state.message=action.error;
         })
+        .addCase(resetState, () => {
+            return initialState;
+        });
     },
 });
 export default colorsSlice.reducer;

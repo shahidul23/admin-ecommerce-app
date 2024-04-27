@@ -9,7 +9,7 @@ import Dropzone from 'react-dropzone'
 import { deleteImg, getUploads } from '../features/upload/uploadSlice';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { createBlog } from '../features/blogs/blogsSlice';
+import { createBlog, resetState } from '../features/blogs/blogsSlice';
 import { getBlogCats } from '../features/blogCat/blogCatSlice';
 
 let blogSchema = Yup.object({ 
@@ -38,6 +38,7 @@ const AddBlog = () => {
       dispatch(createBlog(values))
       formik.resetForm();
       setTimeout(() => {
+        dispatch(resetState())
         navigate('/admin/blog-list')
       }, 3000);
       //alert(JSON.stringify(values));

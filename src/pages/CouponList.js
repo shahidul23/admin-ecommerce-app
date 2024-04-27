@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
 import { Table } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { getBrands } from '../features/brands/brandSlice';
 import { Link } from 'react-router-dom';
 import { BiEdit } from "react-icons/bi";
 import { MdDeleteForever } from "react-icons/md";
+import { getCoupon } from '../features/coupons/couponSlice';
 
 const columns = [
     {
@@ -18,26 +18,38 @@ const columns = [
       sorter: (a, b) => a.name.length - b.name.length,
     },
     {
+      title: 'Expiry Date',
+      dataIndex: 'expiry',
+      sorter: (a, b) => a.expiry.length - b.expiry.length,
+    },
+    {
+      title: 'Discount Amount',
+      dataIndex: 'discount',
+      sorter: (a, b) => a.discount.length - b.discount.length,
+    },
+    {
       title: 'Action',
       dataIndex: 'action',
     },
   ];
  
-const BrandList = () => {
+const CouponList = () => {
 
   const dispatch = useDispatch();
   useEffect(()=>{
-    dispatch(getBrands())
+    dispatch(getCoupon())
   },[dispatch]);
-  const brandState = useSelector((state) => state.brand.brands)
+  const couponState = useSelector((state) => state.coupon.coupon);
   const Tabledata = [];
-  if (Array.isArray(brandState)) {
-    for (let i = 0; i < brandState.length; i++) {
+  if (Array.isArray(couponState)) {
+    for (let i = 0; i < couponState.length; i++) {
       Tabledata.push({
         key: i+1,
-        name: brandState[i].title,
+        name: couponState[i].name,
+        expiry: new Date(couponState[i].expiry).toLocaleString(),
+        discount: couponState[i].discount,
         action: (<>
-        <Link to={`/admin/brand/${brandState[i]._id}`} className='text-warning fs-3'>
+        <Link to="/" className='text-warning fs-3'>
           <BiEdit />
         </Link>
         <Link to="/" className='text-danger fs-3'>
@@ -57,4 +69,4 @@ const BrandList = () => {
   )
 }
 
-export default BrandList
+export default CouponList

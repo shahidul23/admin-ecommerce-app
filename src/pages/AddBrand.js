@@ -4,8 +4,8 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { createBrand } from '../features/brands/brandSlice';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { createBrand, getOneBrand, resetState } from '../features/brands/brandSlice';
 
 
 let BrandSchema = Yup.object({ 
@@ -16,22 +16,39 @@ let BrandSchema = Yup.object({
 const AddBrand = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const getBrandId = location.pathname.split('/')[3];
   const newBrand = useSelector(state => state.brand);
-  const { isError, isLoading, isSuccess, createBrands } = newBrand;
+  const { isError, isLoading, isSuccess, createBrands, brandName } = newBrand;
+  
   const formik = useFormik({
     initialValues:{
-      title:'',
+      title: '',
     },
     validationSchema:BrandSchema ,
     onSubmit: values => {
       dispatch(createBrand(values))
       formik.resetForm();
       setTimeout(() => {
+        dispatch(resetState())
         navigate('/admin/brand-list')
       }, 3000);
       //alert(JSON.stringify(values));
     },
   });
+  useEffect(() =>{
+    if(getBrandId !== undefined){
+      dispatch(getOneBrand(getBrandId));
+    }else{
+      dispatch(resetState());
+    }
+  },[getBrandId, dispatch]);
+
+  useEffect(() => {
+  if (brandName !== undefined) {
+    formik.values.title = brandName;
+  }
+}, [brandName,formik.values]);
   useEffect(() => {
     if (isSuccess && createBrands) {
       toast.success("Brand Name has been created successfully.", {
@@ -60,7 +77,7 @@ const AddBrand = () => {
   }, [isError, isSuccess, isLoading, createBrands]);
   return (
     <div style={{padding:"30px"}}>
-      <h3 className='mb-4 title'>Add Brand</h3>
+      <h3 className='mb-4 title'>{getBrandId !== undefined ? "Edit" : "Add"} Brand</h3>
       <div>
         <form action='' onSubmit={formik.handleSubmit}>
         <CustomInput 

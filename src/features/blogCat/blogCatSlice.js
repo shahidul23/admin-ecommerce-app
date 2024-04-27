@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import blogsCatService from "./blogCatService";
 
 export const createCatBlog = createAsyncThunk("blogsCat/add-blogsCat", async(bCat, thunkAPI) =>{
@@ -15,6 +15,8 @@ export const getBlogCats = createAsyncThunk("blogsCat/get-blogsCat", async(thunk
         return thunkAPI.rejectWithValue(error.message);
     }
 });
+
+export const resetState = createAction("blogsCat/resetState");
 
 const initialState = {
     blogsCat:[],
@@ -57,7 +59,8 @@ export const blogCatSlice = createSlice({
             state.isError = true;
             state.isSuccess = false;
             state.message = action.error;
-        });
+        })
+        .addCase(resetState, ()=> initialState);
     },
 });
 

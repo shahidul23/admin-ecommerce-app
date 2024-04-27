@@ -5,7 +5,9 @@ import {Link} from 'react-router-dom'
 import { FaRegUser, FaRegListAlt, FaBloggerB  } from "react-icons/fa";
 import { MdOutlineBrandingWatermark, MdOutlineCategory, MdOutlineFeedback  } from "react-icons/md";
 import { CiCircleList } from "react-icons/ci";
+import { RiCouponLine } from "react-icons/ri";
 import { TbCategory } from "react-icons/tb";
+import { SiGooglemarketingplatform } from "react-icons/si";
 import shohan from "../images/shohan.jpg"
 import { BiSolidColorFill } from "react-icons/bi";
 import { ToastContainer } from 'react-toastify';
@@ -132,6 +134,23 @@ const MainLayout = () => {
                   key:'blog-category-list',
                   icon: <CiCircleList  className='fs-5'/>,
                   label:'Blogs Category  List'
+                },
+              ]
+            },
+            {
+              key: 'marketing',
+              icon: <SiGooglemarketingplatform  className='fs-5'/>,
+              label: 'Marketing',
+              children:[
+                {
+                  key:'coupon',
+                  icon: <RiCouponLine  className='fs-5'/>,
+                  label:'Add Coupon'
+                },
+                {
+                  key:'coupon-list',
+                  icon: <CiCircleList  className='fs-5'/>,
+                  label:'Coupon List'
                 },
               ]
             },

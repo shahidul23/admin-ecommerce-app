@@ -1,7 +1,7 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import categoryService from "./categoryService";
 
-export const createCategory = createAsyncThunk("brand/add-brand", async(category,thunkAPI) =>{
+export const createCategory = createAsyncThunk("categories/add-categories", async(category,thunkAPI) =>{
   try {
       return await  categoryService.createCategory(category);
   } catch (error) {
@@ -19,6 +19,9 @@ export const getCategories = createAsyncThunk(
     }
   }
 );
+
+export const resetState = createAction("categories/resetState");
+
 const initialState = {
     categories:[],
     isError: false,
@@ -60,7 +63,8 @@ const categoriesSlice = createSlice({
           state.isError = true;
           state.isSuccess = false;
           state.message = action.error;
-        });
+        })
+        .addCase(resetState, () => initialState);
     },
 });
 export default categoriesSlice.reducer;

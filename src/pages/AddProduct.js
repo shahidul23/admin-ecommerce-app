@@ -12,7 +12,7 @@ import Multiselect from "react-widgets/Multiselect";
 import "react-widgets/styles.css";
 import Dropzone from 'react-dropzone'
 import { deleteImg, getUploads } from '../features/upload/uploadSlice';
-import { createProducts } from '../features/product/productSlice';
+import { createProducts, resetState } from '../features/product/productSlice';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -49,6 +49,7 @@ const AddProduct = () => {
       formik.resetForm();
       setColor("");
       setTimeout(() => {
+        dispatch(resetState());
         navigate('/admin/product-list')
       }, 3000);
       //alert(JSON.stringify(values));
