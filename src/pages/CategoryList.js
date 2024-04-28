@@ -104,7 +104,7 @@ const CategoryList = () => {
         hideModal={hideModal}
         open={open}
         performAction= {() =>handleCategoryDelete(categoryId)}
-        title="Are you sure you want to delete this brand?"/>
+        title="Are you sure you want to delete this Category?"/>
     </div>
   )
 }

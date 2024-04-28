@@ -50,6 +50,7 @@ function App() {
           <Route path='category/:id' element={<Category />}/>
           <Route path='category-list' element={<CategoryList />}/>
           <Route path='color' element={<Color />}/>
+          <Route path='color/:id' element={<Color />}/>
           <Route path='color-list' element={<ColorList />}/>
         </Route>
       </Routes>
