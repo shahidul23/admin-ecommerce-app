@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Table } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { getBlogCats } from '../features/blogCat/blogCatSlice';
+import { deleteBlogCat, getBlogCats, resetState } from '../features/blogCat/blogCatSlice';
 import { Link } from 'react-router-dom';
 import { BiEdit } from "react-icons/bi";
 import { MdDeleteForever } from "react-icons/md";
+import CustomModal from '../components/CustomModal';
+import { toast } from 'react-toastify';
 
 const columns = [
   {
@@ -24,6 +26,19 @@ const columns = [
 ];
 const BlogCatList = () => {
   const dispatch = useDispatch();
+  const newBlogCat = useSelector((state) =>{
+    return state.blogCat;
+  });
+  const { isError, isLoading, isSuccess,  deleteBlogCats} = newBlogCat;
+  const [open, setOpen] = useState(false);
+  const [blogCatId, setGBlogCat] = useState("");
+  const showModal = (id) => {
+    setOpen(true);
+    setGBlogCat(id);
+  };
+  const hideModal = () => {
+    setOpen(false);
+  };
   useEffect(()=>{
     dispatch(getBlogCats())
   },[dispatch]);
@@ -36,24 +51,65 @@ const BlogCatList = () => {
         key: i + 1,
         name: blogCatState[i].title,
         action: (<>
-          <Link to="/" className='text-warning fs-3'>
+          <Link to={`/admin/blog-category/${blogCatState[i]._id}`} className='text-warning fs-3'>
             <BiEdit />
           </Link>
-          <Link to="/" className='text-danger fs-3'>
-            <MdDeleteForever />
-          </Link>
+          <button 
+          onClick={() => showModal(blogCatState[i]._id)} 
+          className='text-danger fs-3 bg-transparent border-0' >
+          <MdDeleteForever />
+        </button>
           </>)
       });
     }
   } else {
     console.error("CustomerState is not an array or is undefined.");
   }
+  const handleDelete = (id) =>{
+    dispatch(deleteBlogCat(id))
+    setOpen(false)
+    setTimeout(() =>{
+      dispatch(resetState())
+      dispatch(getBlogCats())
+    },100)
+  }
+  useEffect(() => {
+    if (isSuccess && deleteBlogCats) {
+      toast.success("blog Category Name has been Deleted successfully.", {
+        position: "top-right",
+        autoClose: 500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+    if (isError) {
+      toast.error('Something went wrong! Please try again later', {
+        position: "top-right",
+        autoClose: 500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  }, [isError, isSuccess, isLoading, deleteBlogCats]);
   return (
     <div>
       <h3 className='mb-4 title'>Blog Category List</h3>
       <div>
       <Table columns={columns} dataSource={Tabledata} />
       </div>
+      <CustomModal 
+        hideModal={hideModal}
+        open={open}
+        performAction= {() => handleDelete(blogCatId)}
+        title="Are you sure you want to delete this blog Category?"/>
     </div>
   )
 }
