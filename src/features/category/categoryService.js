@@ -11,10 +11,25 @@ const getCategory = async() =>{
     const response = await axios.get(`${base_url}category`, config);
     return response.data;
 }
+const getOneCategory = async(id) =>{
+    const response = await axios.get(`${base_url}category/${id}`, config);
+    return response.data;
+}
+const updateCategory = async(data) =>{
+    const response = await axios.put(`${base_url}category/${data.id}`, {title: data.category.title}, config);
+    return response.data;
+}
+const deleteCategory = async(id) =>{
+    const response = await axios.delete(`${base_url}category/${id}`, config);
+    return response.data;
+}
 
 const categoryService = {
     createCategory,
-    getCategory
+    getCategory,
+    getOneCategory,
+    updateCategory,
+    deleteCategory
 }
 
 export default categoryService;
