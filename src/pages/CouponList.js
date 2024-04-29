@@ -43,7 +43,6 @@ const CouponList = () => {
   const deleteACoupon = useSelector((state) =>{
     return state.coupon;
   });
-  console.log(deleteACoupon)
   const { isError, isLoading, isSuccess,  deleteCoupons} = deleteACoupon;
   const showModal = (id) => {
     setOpen(true);
