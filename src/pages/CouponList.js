@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Table } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { BiEdit } from "react-icons/bi";
 import { MdDeleteForever } from "react-icons/md";
-import { getCoupon } from '../features/coupons/couponSlice';
+import { deleteCoupon, getCoupon, resetState } from '../features/coupons/couponSlice';
+import CustomModal from '../components/CustomModal';
+import { toast } from 'react-toastify';
 
 const columns = [
     {
@@ -36,6 +38,20 @@ const columns = [
 const CouponList = () => {
 
   const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
+  const [ couponId, setCouponId ] = useState("");
+  const deleteACoupon = useSelector((state) =>{
+    return state.coupon;
+  });
+  console.log(deleteACoupon)
+  const { isError, isLoading, isSuccess,  deleteCoupons} = deleteACoupon;
+  const showModal = (id) => {
+    setOpen(true);
+    setCouponId(id)
+  };
+  const hideModal = () => {
+    setOpen(false);
+  };
   useEffect(()=>{
     dispatch(getCoupon())
   },[dispatch]);
@@ -49,22 +65,61 @@ const CouponList = () => {
         expiry: new Date(couponState[i].expiry).toLocaleString(),
         discount: couponState[i].discount,
         action: (<>
-        <Link to="/" className='text-warning fs-3'>
+        <Link to={`/admin/coupon/${couponState[i]._id}`} className='text-warning fs-3'>
           <BiEdit />
         </Link>
-        <Link to="/" className='text-danger fs-3'>
+        <button onClick={() => showModal(couponState[i]._id)} className='text-danger fs-3 bg-transparent border-0'>
           <MdDeleteForever />
-        </Link>
+        </button>
         </>)
       });
     }
   }
+  const handleDelete = (id) => {
+    dispatch(deleteCoupon(id));
+    setOpen(false);
+    setTimeout(() =>{
+      dispatch(resetState());
+      dispatch(getCoupon());
+    }, 100)
+  }
+  useEffect(() => {
+    if (isSuccess && deleteCoupons) {
+      toast.success("Coupon has been Deleted successfully.", {
+        position: "top-right",
+        autoClose: 500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+    if (isError) {
+      toast.error('Something went wrong! Please try again later', {
+        position: "top-right",
+        autoClose: 500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  }, [isError, isSuccess, isLoading, deleteCoupons]);
   return (
     <div>
-      <h3 className='mb-4 title'>Brand List</h3>
+      <h3 className='mb-4 title'>Coupon List</h3>
       <div>
       <Table columns={columns} dataSource={Tabledata} />
       </div>
+      <CustomModal 
+        hideModal={hideModal}
+        open={open}
+        performAction= {() =>handleDelete(couponId)}
+        title="Are you sure you want to delete this Coupon?"/>
     </div>
   )
 }
