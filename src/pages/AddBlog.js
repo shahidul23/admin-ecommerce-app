@@ -7,9 +7,9 @@ import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import Dropzone from 'react-dropzone'
 import { deleteImg, getUploads } from '../features/upload/uploadSlice';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { createBlog, resetState } from '../features/blogs/blogsSlice';
+import { createBlog, getABlog, resetState } from '../features/blogs/blogsSlice';
 import { getBlogCats } from '../features/blogCat/blogCatSlice';
 
 let blogSchema = Yup.object({ 
@@ -25,13 +25,17 @@ const AddBlog = () => {
   const blogState = useSelector((state) =>state.blogCat.blogsCat);
   const imageState = useSelector((state) =>state.upload.images.data);
   const newBlogs = useSelector((state) =>state.blog)
-  const { isError, isLoading, isSuccess, createBlogs } = newBlogs;
+  const { isError, isLoading, isSuccess, createBlogs, blogTitle, blogDescription,blogCategory, blogImages  } = newBlogs;
+  const location = useLocation();
+  const getBlogID = location.pathname.split("/")[3];
+  
   const formik = useFormik({
+    enableReinitialize:true,
     initialValues:{
-      title:'',
-      description:'',
-      category:'',
-      images:'',
+      title: blogTitle || '',
+      description: blogDescription || '',
+      category: blogCategory || '',
+      images: '',
     },
     validationSchema:blogSchema ,
     onSubmit: values => {
@@ -44,6 +48,7 @@ const AddBlog = () => {
       //alert(JSON.stringify(values));
     },
   });
+  
   useEffect(() => {
     if (isSuccess && createBlogs) {
       toast.success("Blog has been created successfully.", {
@@ -85,10 +90,18 @@ const AddBlog = () => {
   useEffect(() =>{
     formik.values.images = img;
   },[img]);
+  useEffect(() =>{
+    if (getBlogID !== undefined) {
+      dispatch(getABlog(getBlogID))
+      
+    }else{
+      dispatch(resetState())
+    }
+  }, [dispatch, getBlogID])
 
   return (
     <div style={{padding:"30px"}}>
-      <h3 className='mb-4'>Add Blog</h3>
+      <h3 className='mb-4'>{getBlogID !== undefined ? "Edit" : "Add"} Blog</h3>
       <div className=''>
         <form action='' onSubmit={formik.handleSubmit}>
             <div className='mt-4'>
@@ -154,12 +167,12 @@ const AddBlog = () => {
                   type='button'
                   onClick={()=>dispatch(deleteImg(item.public_id))}
                   className='btn-close position-absolute'
-                  style={{top:"5px", right:"5px"}}></button>
-                  <img src={item.url} alt="" width='200px' height='auto'/>
+                  style={{top:"10px", right:"10px"}}></button>
+                  <img src={item.url} alt="" width={200} height={200}/>
                 </div>
               ))}
             </div>
-            <button type='submit' className='btn  btn-success border-0 rounded-3 my-5'>Add Blog</button>
+            <button type='submit' className='btn  btn-success border-0 rounded-3 my-5'>{getBlogID !== undefined ? "Edit" : "Add"} Blog</button>
         </form>
       </div>
     </div>

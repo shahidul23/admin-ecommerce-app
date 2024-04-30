@@ -41,7 +41,7 @@ if (Array.isArray(blogState)) {
       name: blogState[i].title,
       category: blogState[i].category,
       action: (<>
-        <Link to="/" className='text-warning fs-3'>
+        <Link to={`/admin/blog/${blogState[i]._id}`} className='text-warning fs-3'>
           <BiEdit />
         </Link>
         <Link to="/" className='text-danger fs-3'>

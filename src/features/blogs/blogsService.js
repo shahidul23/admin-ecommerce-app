@@ -6,13 +6,17 @@ const createBlogService = async(blog) =>{
     const response = await axios.post(`${base_url}blog`,blog,config);
     return response.data;
 }
-
+const getABlog = async(id) =>{
+    const response = await axios.get(`${base_url}blog/${id}`,config);
+    return response.data;
+}
 const getBlogs = async() =>{
     const response = await axios.get(`${base_url}blog`,config);
     return response.data;
 }
 const blogsService = {
     createBlogService,
+    getABlog,
     getBlogs
 };
 
