@@ -24,8 +24,9 @@ const AddBlog = () => {
   const blogState = useSelector((state) => state.blogCat.blogsCat);
   const imageState = useSelector((state) => state.upload.images.data);
   const newBlogs = useSelector((state) => state.blog);
-  const { isError, isLoading, isSuccess, createBlogs, blogTitle, blogDescription, blogCategory, blogImages, updateBlogs } = newBlogs;
-  // console.log(blogTitle)
+  const blogImages = useSelector((state) => state.blog.blogImages)
+  const { isError, isLoading, isSuccess, createBlogs, blogTitle, blogDescription, blogCategory,updateBlogs } = newBlogs;
+  //console.log(blogImages)
   const location = useLocation();
   const getBlogID = location.pathname.split("/")[3]; 
   
@@ -35,7 +36,7 @@ const AddBlog = () => {
       title: blogTitle || '',
       description: blogDescription || '',
       category: blogCategory || '',
-      images: '',
+      images: blogImages || '',
     },
     validationSchema: blogSchema,
     onSubmit: values => {
@@ -50,17 +51,23 @@ const AddBlog = () => {
         dispatch(resetState());
         navigate('/admin/blog-list');
       }, 3000);
-      //alert(JSON.stringify(values));
+      // alert(JSON.stringify(values));
     },
   });
-  const imagesData = blogImages || imageState;
+  
+  // const img = [];
+  // imageState && imageState.forEach((i) =>{
+  //   img.push({
+  //     public_id: i.public_id,
+  //     url: i.url,
+  //   })
+  // })
   const img = useMemo(() => {
-    const imagesData = blogImages || imageState;
-    return imagesData && imagesData.map(i => ({ public_id: i.public_id, url: i.url }));
-  }, [imageState, blogImages]);
-
+      return imageState && imageState.map(i => ({ public_id: i.public_id, url: i.url }));
+  }, [imageState]);
+  
   useEffect(() => {
-    formik.setValues({ ...formik.values, images: img });
+    formik.setValues({ ...formik.values, images:img });
   }, [img]);
 
   useEffect(() => {
@@ -173,7 +180,7 @@ const AddBlog = () => {
             </Dropzone>
           </div>
           <div className='show-image d-flex flex-wrap gap-3'>
-            {imagesData && imagesData.map((item, key) => (
+            {(imageState || blogImages ) && ( imageState || blogImages ).map((item, key) => (
               <div key={key} className='position-relative'>
                 <button 
                   type='button'
