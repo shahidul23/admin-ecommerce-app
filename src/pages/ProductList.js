@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Table } from 'antd';
-import { getProducts } from '../features/product/productSlice';
+import { getProducts, productDelete, resetState } from '../features/product/productSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { BiEdit } from "react-icons/bi";
 import { MdDeleteForever } from "react-icons/md";
+import CustomModal from '../components/CustomModal';
+import { toast } from 'react-toastify';
 
 const columns = [
     {
@@ -44,8 +46,18 @@ const columns = [
   ];
 
 const ProductList = () => {
- 
+  const [open, setOpen] = useState(false);
+  const [ productId, setProductID ] = useState("");
   const  dispatch = useDispatch();
+  const newProduct = useSelector(state => state.product);
+  const { isError, isLoading, isSuccess, deleteProducts } = newProduct; 
+  const showModal = (id) => {
+    setOpen(true);
+    setProductID(id);
+  };
+  const hideModal = () => {
+    setOpen(false);
+  };
   useEffect(()=>{
     dispatch(getProducts())
   },[dispatch]);
@@ -63,22 +75,66 @@ const ProductList = () => {
         brand:  productState[i].brand,
         quantity: productState[i].quantity,
         action: (<>
-          <Link to="/" className='fs-3 text-danger'>
+          <Link to={`/admin/product/${productState[i]._id}`} className='fs-3 text-danger'>
             <BiEdit />
           </Link>
-          <Link to="/" className='fs-3 text-danger ms-2'> 
-            <MdDeleteForever />
-          </Link>
+          <button 
+          onClick={() => showModal(productState[i]._id)} 
+          className='text-danger fs-3 bg-transparent border-0' >
+          <MdDeleteForever />
+        </button>
         </>
         )
       });
     }
   }
+
+  const HandelDelete = (id) =>{
+    dispatch(productDelete(id))
+    setOpen(false);
+    setTimeout(() => {
+      dispatch(resetState())
+      dispatch(getProducts())
+    }, 100);
+  }
+  useEffect(() => {
+    if (isSuccess && deleteProducts) {
+      toast.success("Product has been Deleted successfully.", {
+        position: "top-right",
+        autoClose: 500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+    if (isError) {
+      toast.error('Something went wrong! Please try again later', {
+        position: "top-right",
+        autoClose: 500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  }, [isError, isSuccess, isLoading, deleteProducts]);
   
   return (
     <div>
       <h3 className='mb-4 title'>Product List</h3>
-      <Table columns={columns} dataSource={Tabledata} />
+      <div>
+        <Table columns={columns} dataSource={Tabledata} />
+      </div>
+      <CustomModal
+      hideModal={hideModal}
+      open={open}
+      performAction= {() => HandelDelete(productId)}
+      title="Are you sure you want to delete this Product?"/>
     </div>
   )
 }

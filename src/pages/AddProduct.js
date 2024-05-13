@@ -12,8 +12,8 @@ import Multiselect from "react-widgets/Multiselect";
 import "react-widgets/styles.css";
 import Dropzone from 'react-dropzone'
 import { deleteImg, getUploads } from '../features/upload/uploadSlice';
-import { createProducts, resetState } from '../features/product/productSlice';
-import { useNavigate } from 'react-router-dom';
+import { createProducts, getAProduct, resetState } from '../features/product/productSlice';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 
@@ -29,19 +29,43 @@ const AddProduct = () => {
   const dispatch = useDispatch();
   const [color, setColor] = useState([]);
   //const [images, setImages] = useState([]);
+  const location = useLocation();
+  const getProductID = location.pathname.split('/')[3];
   const navigate = useNavigate();
+  const brandState = useSelector((state) => state.brand.brands);
+  const categoryState = useSelector((state) =>state.category.categories);
+  const colorState = useSelector((state) =>state.color.colors);
+  const imageState = useSelector((state) =>state.upload.images.data);
+  const newProduct = useSelector((state) =>state.product);
+  const { 
+    isError, 
+    isLoading, 
+    isSuccess, 
+    createProduct, 
+    productTitle, 
+    productCode, 
+    productDescription, 
+    productPrice, 
+    productQuantity, 
+    productColor, 
+    productTag, 
+    productBrand, 
+    productCategory, 
+    productImage 
+  } = newProduct;
   const formik = useFormik({
+    enableReinitialize:true,
     initialValues:{
-      title:'',
-      code:'',
-      price:'',
-      quantity:'',
-      description:'',
-      color:'',
-      tags:'',
-      category:'',
-      brand:'',
-      images:'',
+      title: productTitle || '',
+      code: productCode || '',
+      price:productPrice || '',
+      quantity: productQuantity || '',
+      description: productDescription || '',
+      color: productColor || '',
+      tags: productTag || '',
+      category: productCategory || '',
+      brand: productBrand || '',
+      images: productImage || '',
     },
     validationSchema:userSchema ,
     onSubmit: values => {
@@ -63,12 +87,15 @@ const AddProduct = () => {
     dispatch(getColors());
   },[dispatch]);
 
-  const brandState = useSelector((state) => state.brand.brands);
-  const categoryState = useSelector((state) =>state.category.categories);
-  const colorState = useSelector((state) =>state.color.colors);
-  const imageState = useSelector((state) =>state.upload.images.data);
-  const newProduct = useSelector((state) =>state.product);
-const { isError, isLoading, isSuccess, createProduct } = newProduct;
+  useEffect(() =>{
+    if (getProductID !== undefined) {
+      dispatch(getAProduct(getProductID))
+    }else{
+      dispatch(resetState());
+    }
+  },[dispatch])
+
+  
 
 useEffect(() => {
   if (isSuccess && createProduct) {
@@ -117,7 +144,7 @@ useEffect(() => {
   },[color,img]);
   return (
     <div style={{padding:"30px"}}>
-      <h3 className='mb-4 title'>Add Product</h3>
+      <h3 className='mb-4 title'>{getProductID !== undefined ? "Edit" : "Add"} Product</h3>
       <div>
         <form onSubmit={formik.handleSubmit} className='d-flex gap-3 flex-column'>
             <div className='row d-flex justify-content-between'>
@@ -188,6 +215,7 @@ useEffect(() => {
               </div>
             </div>
             <Multiselect
+              placeholder='select Color'
               name="color"
               dataKey="id"
               textField="color"
@@ -262,7 +290,7 @@ useEffect(() => {
                 </div>
               ))}
             </div>
-            <button type='submit' className='btn  btn-success border-0 rounded-3 my-5'>Add Product</button>
+            <button type='submit' className='btn  btn-success border-0 rounded-3 my-5'>{getProductID !== undefined ? "Edit" : "Add"} Product</button>
         </form>
       </div>
     </div>
